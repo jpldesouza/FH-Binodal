@@ -12,9 +12,9 @@ def compute_binodal(yvec, N):
     ftrial = 2.0 / ytrial * np.arctanh(ytrial)
 
     # Create interpolation function
-    h = interp1d(ftrial, ytrial, kind='linear', bounds_error=False)
+    hinv = interp1d(ftrial, ytrial, kind='linear', bounds_error=False)
 
-    zvec = h(fvec / N - 2 * (1 / N - 1))
+    zvec = hinv(fvec / N - 2 * (1 / N - 1))
     Bvec = 2 * zvec / (yvec + zvec)
     chi_vec = ((1 / N - 1) * Bvec * yvec - np.log((1 - zvec) / (1 + zvec))) / (Bvec ** 2 * yvec)
     phi_right_vec = zvec * (1 + yvec) / (zvec + yvec)
