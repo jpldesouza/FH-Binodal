@@ -7,14 +7,15 @@ def compute_binodal(yvec, N):
     # Function that takes in the vector of y values and the value of N then outputs the the binodal curve in the form of
     # phi_right_vec, phi_left_vec, and chi_vec
 
-    fvec = 2.0 / yvec * np.arctanh(yvec)
+    hyvec = 1.0 / yvec * np.arctanh(yvec)
     ytrial = np.logspace(np.log10(min(yvec)), np.log10(max(yvec)), 2000)
-    ftrial = 2.0 / ytrial * np.arctanh(ytrial)
+    ftrial = 1.0 / ytrial * np.arctanh(ytrial)
 
     # Create interpolation function
     hinv = interp1d(ftrial, ytrial, kind='linear', bounds_error=False)
 
-    zvec = hinv(fvec / N - 2 * (1 / N - 1))
+    zvec = hinv(hyvec / N - (1 / N - 1))
+    print(zvec)
     Bvec = 2 * zvec / (yvec + zvec)
     chi_vec = ((1 / N - 1) * Bvec * yvec - np.log((1 - zvec) / (1 + zvec))) / (Bvec ** 2 * yvec)
     phi_right_vec = zvec * (1 + yvec) / (zvec + yvec)
@@ -41,9 +42,9 @@ def approx_binodal(N):
 N = 100  # Define N
 
 # Define yvec so that it samples values close to 1
-yvec = np.concatenate([np.logspace(-2, np.log10(0.1), 5000),
+yvec = np.concatenate([np.logspace(-3, np.log10(0.1), 5000),
                        np.linspace(0.1001, 0.8999, 5000),
-                       np.flip(1 - np.logspace(-15, np.log10(0.1), 5000))])
+                       np.flip(1 - np.logspace(-20, np.log10(0.1), 5000))])
 
 # Call the functions
 chi_vec, phi_right_vec, phi_left_vec = compute_binodal(yvec, N)
